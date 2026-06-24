@@ -7,12 +7,12 @@ from prepo import clean_text, prepro_sentimen, lexicon_handle
 # model_directory = r'E:\Kuliah\Materi Tugas\Semester 8\TA\dataset bersih\ini-fix\model\mbg prepo no stem'
 # model_directory = r'E:\Kuliah\Materi Tugas\Semester 8\TA\kode program\78\final'
 # model_directory = r'E:\Kuliah\Materi Tugas\Semester 8\TA\dataset bersih\ini-fix\model\cuma ngecek\model final bgt'
-model_directory = r'E:\Kuliah\Materi Tugas\Semester 8\TA\dataset bersih\ini-fix\negasi\final'
+# model_directory = r'E:\Kuliah\Materi Tugas\Semester 8\TA\dataset bersih\ini-fix\negasi\final'
 
 
 model_path = {
-    "SVM_sentimen": os.path.join(model_directory, 'SVM_sentimen.pkl'),
-    "SVM_gaya": os.path.join(model_directory, 'SVM_gaya.pkl')
+    "SVM_sentimen": 'SVM_sentimen.pkl',
+    "SVM_gaya": 'SVM_gaya.pkl'
 }
 
 models = {}
