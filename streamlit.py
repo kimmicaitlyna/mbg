@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import pickle
 import os
-from prepo import clean_text, prepro_sentimen, lexicon_handle
+from prepo import clean_text, prepro_sentimen, lexicon_handle, nama_tokoh, hanya_nama_tokoh
 
 # model_directory = r'E:\Kuliah\Materi Tugas\Semester 8\TA\dataset bersih\ini-fix\model\mbg prepo no stem'
 # model_directory = r'E:\Kuliah\Materi Tugas\Semester 8\TA\kode program\78\final'
@@ -88,7 +88,7 @@ if st.button("🚀 Analisis Sekarang"):
                 elif score < 0:
                     pred_sentimen = "negatif"
                     
-            if len(tokens) > 0 and all(token in nama_tokoh for token in tokens):
+            if hanya_nama_tokoh(tokens):
                 pred_sentimen = "netral"
 
             # pred_sentimen = model_sentimen.predict([t])[0]
