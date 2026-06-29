@@ -103,6 +103,15 @@ neutral_words = {
     "gizi",
 }
 
+nama_tokoh = {
+    "prabowo",
+    "subianto",
+    "gibran",
+    "jokowi",
+    "rakabuming"
+}
+def hanya_nama_tokoh(tokens):
+    return len(tokens) > 0 and all(token in nama_tokoh for token in tokens)
 # preprocessing
 
 def handle_negation(tokens):
