@@ -68,6 +68,8 @@ if st.button("🚀 Analisis Sekarang"):
         results = []
 
         for t in texts:
+
+            
             cleaned_gaya = clean_text(t)
             cleaned_sentimen = prepro_sentimen(cleaned_gaya)
             
@@ -85,6 +87,9 @@ if st.button("🚀 Analisis Sekarang"):
 
                 elif score < 0:
                     pred_sentimen = "negatif"
+                    
+            if len(tokens) > 0 and all(token in nama_tokoh for token in tokens):
+                pred_sentimen = "netral"
 
             # pred_sentimen = model_sentimen.predict([t])[0]
             # pred_gaya = model_gaya.predict([t])[0]
