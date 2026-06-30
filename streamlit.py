@@ -86,6 +86,8 @@ if st.button("🚀 Analisis Sekarang"):
                 pred_sentimen = "negatif"
             elif score > 0 and pred_sentimen != "positif":
                 pred_sentimen = "positif"
+            elif score == 0 and pred_sentimen != "netral":
+                pred_sentimen = "netral"
 
             results.append({
                 "Tweet": t,
