@@ -1,14 +1,8 @@
-import streamlit as st
+import cobacoba.streamlit as st
 import pandas as pd
 import pickle
 import os
-from prepo import clean_text, prepro_sentimen, lexicon_handle, nama_tokoh, hanya_nama_tokoh
-
-# model_directory = r'E:\Kuliah\Materi Tugas\Semester 8\TA\dataset bersih\ini-fix\model\mbg prepo no stem'
-# model_directory = r'E:\Kuliah\Materi Tugas\Semester 8\TA\kode program\78\final'
-# model_directory = r'E:\Kuliah\Materi Tugas\Semester 8\TA\dataset bersih\ini-fix\model\cuma ngecek\model final bgt'
-# model_directory = r'E:\Kuliah\Materi Tugas\Semester 8\TA\dataset bersih\ini-fix\negasi\final'
-
+from prepo import clean_text, prepro_sentimen, lexicon_handle
 
 model_path = {
     "SVM_sentimen": 'SVM_sentimen.pkl',
@@ -39,6 +33,7 @@ text_input = st.text_area(
 )
 st.divider()
 
+
 if st.button("🚀 Analisis Sekarang"):
     if text_input.strip() == "" or text_input.strip() == "-":
         st.warning("⚠️ Input tidak boleh kosong.")
@@ -68,8 +63,6 @@ if st.button("🚀 Analisis Sekarang"):
         results = []
 
         for t in texts:
-
-            
             cleaned_gaya = clean_text(t)
             cleaned_sentimen = prepro_sentimen(cleaned_gaya)
             
@@ -78,21 +71,23 @@ if st.button("🚀 Analisis Sekarang"):
             
             tokens = cleaned_sentimen.split()
             score = lexicon_handle(tokens)
-            
-            has_negation = any("_" in token for token in tokens)
 
+            # negation
+            has_negation = any("_" in token for token in tokens)
             if has_negation and score != 0:
                 if score > 0:
                     pred_sentimen = "positif"
 
                 elif score < 0:
                     pred_sentimen = "negatif"
-                    
-            if hanya_nama_tokoh(tokens):
+            
+            # pred + lexicon
+            if score < 0 and pred_sentimen != "negatif":
+                pred_sentimen = "negatif"
+            elif score > 0 and pred_sentimen != "positif":
+                pred_sentimen = "positif"
+            elif score == 0 and pred_sentimen != "netral":
                 pred_sentimen = "netral"
-
-            # pred_sentimen = model_sentimen.predict([t])[0]
-            # pred_gaya = model_gaya.predict([t])[0]
 
             results.append({
                 "Tweet": t,
@@ -109,3 +104,4 @@ if st.button("🚀 Analisis Sekarang"):
             use_container_width=True,
             hide_index=True
         )
+        
