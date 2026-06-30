@@ -39,7 +39,12 @@ positive_words = {
     "suka",
     "penting",
     "guna",
-    "sesuai"
+    "sesuai",
+    "manfaat",
+    "peduli",
+    "apresiasi",
+    "senang",
+    "sejahtera"
 }
 
 negative_words = {
