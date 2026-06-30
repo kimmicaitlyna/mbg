@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import pickle
 import os
-from prepo import clean_text, prepro_sentimen, lexicon_handle
+from prepo import clean_text, prepro_sentimen, lexicon_handle, neutral_words
 
 model_path = {
     "SVM_sentimen": 'SVM_sentimen.pkl',
