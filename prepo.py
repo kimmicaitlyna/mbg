@@ -3,24 +3,7 @@ from nltk.tokenize import word_tokenize
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 from Sastrawi.StopWordRemover.StopWordRemoverFactory import StopWordRemoverFactory
 import nltk
-# nltk.download('punkt', download_dir=r'E:\Kuliah\Materi Tugas\Semester 8\nltk_data')
 nltk.download('punkt_tab')
-def clean_text(text):
-    text = text.lower()  
-    text = re.sub(r'&amp;', 'dan', text) 
-    text = re.sub(r'badan gizi nasional', 'bgn', text) 
-    text = re.sub(r'makan bergizi gratis', 'mbg', text) 
-                
-    text = re.sub(r'([a-zA-Z]+)2([a-zA-Z]*)', r'\1 \1\2', text) 
-    text = re.sub(r'\b(\w+)\s+\1\b', r'\1', text) 
-    text = re.sub(r'https?://\S+|www\.\S+', '', text) 
-    text = re.sub(r'@\w+', '', text) 
-    text = re.sub(r'#\w+', '', text) 
-    text = re.sub(r'[^a-zA-Z\s]', ' ', text) 
-    text = re.sub(r'\b[a-zA-Z]{1}\b', ' ', text)
-    text = re.sub(r'\s+', ' ', text).strip()
-
-    return text.strip()
 
 positive_words = {
     "baik",
@@ -56,9 +39,7 @@ positive_words = {
     "suka",
     "penting",
     "guna",
-    "sesuai",
-    "manfaat"
-    # "gizi"
+    "sesuai"
 }
 
 negative_words = {
@@ -99,20 +80,9 @@ neutral_words = {
     "siswa",
     "bgn",
     "rakyat",
-    "negara"
-    "gizi",
+    "negara",
+    "gizi"
 }
-
-nama_tokoh = {
-    "prabowo",
-    "subianto",
-    "gibran",
-    "jokowi",
-    "rakabuming"
-}
-def hanya_nama_tokoh(tokens):
-    return len(tokens) > 0 and all(token in nama_tokoh for token in tokens)
-# preprocessing
 
 def handle_negation(tokens):
     negation = {"tidak", "bukan", "belum", "jangan", "tanpa", "kurang", "tak"}
@@ -130,6 +100,47 @@ def handle_negation(tokens):
             i += 1
     
     return result
+
+def lexicon_handle(tokens):
+    negation = {"tidak", "bukan", "belum", "jangan", "tanpa", "kurang", "tak"}
+    score = 0
+    
+    for word in tokens:
+        if "_" in word:
+            neg, kata = word.split("_", 1)
+            
+            if neg in negation:
+                if kata in positive_words:
+                    score -= 1
+                elif kata in negative_words:
+                    score += 1
+        elif word in positive_words:
+            score += 1
+        elif word in negative_words:
+            score -= 1
+        elif word in neutral_words:
+            score += 0
+        else:
+            score += 0
+    
+    return score
+
+def clean_text(text):
+    text = text.lower()  
+    text = re.sub(r'&amp;', 'dan', text) 
+    text = re.sub(r'badan gizi nasional', 'bgn', text) 
+    text = re.sub(r'makan bergizi gratis', 'mbg', text) 
+                
+    text = re.sub(r'([a-zA-Z]+)2([a-zA-Z]*)', r'\1 \1\2', text) 
+    text = re.sub(r'\b(\w+)\s+\1\b', r'\1', text) 
+    text = re.sub(r'https?://\S+|www\.\S+', '', text) 
+    text = re.sub(r'@\w+', '', text) 
+    text = re.sub(r'#\w+', '', text) 
+    text = re.sub(r'[^a-zA-Z\s]', ' ', text) 
+    text = re.sub(r'\b[a-zA-Z]{1}\b', ' ', text)
+    text = re.sub(r'\s+', ' ', text).strip()
+
+    return text.strip()
 
 normalization_dict = {
     "yg": "yang",
@@ -222,14 +233,12 @@ important_dict = [
 
 #setup stemmer
 factory_stem = StemmerFactory()
-# stem = factory_stem.get_words()
 stemmer = factory_stem.create_stemmer()
 
 #setup stopword
 factory_stop = StopWordRemoverFactory()
 stopword_list = factory_stop.get_stop_words()
 stopword_list = stopword_list + stopwords_dict
-# stopword = factory_stop.create_stop_word_remover()
 
 for word in important_dict:
     if word in stopword_list:
@@ -237,7 +246,6 @@ for word in important_dict:
 
 def prepro_sentimen(text): 
     #tokenisasi
-    
     tokens = word_tokenize(text)
 
     #normalisasi
@@ -253,27 +261,3 @@ def prepro_sentimen(text):
     tokens = [word for word in tokens if word not in stopword_list]
     
     return " ".join(tokens)
-
-def lexicon_handle(tokens):
-    negation = {"tidak", "bukan", "belum", "jangan", "tanpa", "kurang", "tak"}
-    score = 0
-    
-    for word in tokens:
-        if "_" in word:
-            neg, kata = word.split("_", 1)
-            
-            if neg in negation:
-                if kata in positive_words:
-                    score -= 1
-                elif kata in negative_words:
-                    score += 1
-        elif word in positive_words:
-            score += 1
-        elif word in negative_words:
-            score -= 1
-        elif word in neutral_words:
-            score += 0
-        else:
-            score += 0
-    
-    return score
